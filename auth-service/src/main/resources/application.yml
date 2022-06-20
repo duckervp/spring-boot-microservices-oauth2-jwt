@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: auth-service
+  jpa:
+    databasePlatform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddlAuto: update
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:test_user}?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
+    username: root
+    password: root
+server:
+  port: 3001
+  servlet:
+    contextPath: /uaa
+
+eureka:
+  client:
+  serviceUrl:
+    defaultZone: http://localhost:8761/eureka/
+
+signing:
+  key: thisIsSigningKey!
+
+security:
+  oauth2:
+    client:
+      clientId: client
+      clientSecret: client@2022
+      accessTokenValiditySeconds: 900
+      refreshTokenValiditySeconds: 18000
+encrypt:
+  keyStore:
+    alias: jwt
+    password: god@123

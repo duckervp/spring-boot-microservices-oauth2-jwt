@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      routes:
+        - id: ${SERVICE0_NAME:auth-service}
+          uri:
+            http://${SERVICE0_HOST:localhost}:${SERVICE1_PORT:3001}/
+          predicates:
+            - Path=/oauth/**, /auth/**
+        - id: ${SERVICE1_NAME:user-service}
+          uri:
+            http://${SERVICE1_HOST:localhost}:${SERVICE1_PORT:3002}/
+          predicates:
+            - Path=${SERVICE1_PATH:/api/users}/**
+server:
+  port: ${SERVER_PORT:4000}
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
