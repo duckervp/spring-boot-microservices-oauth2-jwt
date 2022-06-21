@@ -58,7 +58,6 @@ public class JWTOAuth2Config extends AuthorizationServerConfigurerAdapter {
         endpoints
                 .tokenStore(tokenStore)
                 .tokenEnhancer(tokenEnhancerChain)
-                .accessTokenConverter(jwtAccessTokenConverter)
                 .authenticationManager(authenticationManagerBean)
                 .userDetailsService(userDetailsService);
     }

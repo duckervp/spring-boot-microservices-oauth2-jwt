@@ -1,7 +1,7 @@
 package com.savvycom.authservice.service.security;
 
-import com.savvycom.authservice.domain.CustomUserDetails;
-import com.savvycom.authservice.domain.User;
+import com.savvycom.authservice.domain.model.CustomUserDetails;
+import com.savvycom.authservice.domain.entity.User;
 import com.savvycom.authservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

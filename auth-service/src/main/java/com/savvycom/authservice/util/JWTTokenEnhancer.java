@@ -1,6 +1,6 @@
 package com.savvycom.authservice.util;
 
-import com.savvycom.authservice.domain.CustomUserDetails;
+import com.savvycom.authservice.domain.model.CustomUserDetails;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;

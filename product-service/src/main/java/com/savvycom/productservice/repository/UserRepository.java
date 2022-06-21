@@ -1,10 +1,9 @@
 package com.savvycom.productservice.repository;
 
-import com.savvycom.productservice.domain.User;
+import com.savvycom.productservice.domain.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
-
 }

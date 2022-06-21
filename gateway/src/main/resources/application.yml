@@ -6,16 +6,26 @@ spring:
       routes:
         - id: ${SERVICE0_NAME:auth-service}
           uri:
-            http://${SERVICE0_HOST:localhost}:${SERVICE1_PORT:3001}/
+            http://${SERVICE0_HOST:localhost}:${SERVICE0_PORT:3001}/
           predicates:
-            - Path=/oauth/**, /auth/**
+            - Path=/uaa/oauth/**, /uaa/auth/**
         - id: ${SERVICE1_NAME:user-service}
           uri:
             http://${SERVICE1_HOST:localhost}:${SERVICE1_PORT:3002}/
           predicates:
             - Path=${SERVICE1_PATH:/api/users}/**
+        - id: ${SERVICE2_NAME:product-service}
+          uri:
+            http://${SERVICE2_HOST:10.22.5.136}:${SERVICE2_PORT:8001}/
+          predicates:
+            - Path=${SERVICE2_PATH:/api/product}/**
+        - id: ${SERVICE3_NAME:order-service}
+          uri:
+            http://${SERVICE3_HOST:10.22.5.133}:${SERVICE3_PORT:8080}/
+          predicates:
+            - Path=${SERVICE3_PATH:/api/order}/**
 server:
-  port: ${SERVER_PORT:4000}
+  port: ${SERVER_PORT:8762}
 eureka:
   client:
     serviceUrl:

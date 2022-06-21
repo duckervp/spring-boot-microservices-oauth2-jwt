@@ -7,7 +7,7 @@ spring:
       ddlAuto: update
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:test_user}?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:db_user}?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
     username: root
     password: root
 server:
@@ -19,9 +19,6 @@ eureka:
   client:
   serviceUrl:
     defaultZone: http://localhost:8761/eureka/
-
-signing:
-  key: thisIsSigningKey!
 
 security:
   oauth2:

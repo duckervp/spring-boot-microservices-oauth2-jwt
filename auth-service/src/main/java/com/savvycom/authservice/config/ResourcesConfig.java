@@ -11,9 +11,6 @@ import org.springframework.stereotype.Component;
 @Component
 @Getter
 public class ResourcesConfig {
-    @Value("${signing.key}")
-    private String signingKey;
-
     @Value("${security.oauth2.client.clientId}")
     private String clientId;
 

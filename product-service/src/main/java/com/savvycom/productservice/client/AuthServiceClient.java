@@ -1,6 +1,6 @@
 package com.savvycom.productservice.client;
 
-import com.savvycom.productservice.domain.User;
+import com.savvycom.productservice.domain.entity.User;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

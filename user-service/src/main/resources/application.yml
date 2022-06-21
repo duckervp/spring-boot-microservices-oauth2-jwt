@@ -1,14 +1,7 @@
 security:
   oauth2:
-    client:
-      userInfoUri: http://localhost:3001/uaa/auth/user
-      clientId: user-service
-      clientSecret: user-service
-      accessTokenUri: http://localhost:3001/uaa/oauth/token
-      grant-type: client_credentials
-      scope: server
-    resource:
-      userInfoUri: http://localhost:3001/uaa/auth/user
+      resource:
+        userInfoUri: http://localhost:3001/uaa/auth/user
 
 spring:
   main:
@@ -21,7 +14,7 @@ spring:
       ddlAuto: update
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:test_user}?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:db_user}?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
     username: root
     password: root
 server:

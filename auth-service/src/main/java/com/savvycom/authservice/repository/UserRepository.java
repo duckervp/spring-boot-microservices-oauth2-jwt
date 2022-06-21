@@ -1,6 +1,6 @@
 package com.savvycom.authservice.repository;
 
-import com.savvycom.authservice.domain.User;
+import com.savvycom.authservice.domain.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

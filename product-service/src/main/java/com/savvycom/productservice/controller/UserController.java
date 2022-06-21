@@ -1,7 +1,7 @@
 package com.savvycom.productservice.controller;
 
 import com.savvycom.productservice.client.UserServiceClient;
-import com.savvycom.productservice.domain.UserOutput;
+import com.savvycom.productservice.domain.model.UserOutput;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

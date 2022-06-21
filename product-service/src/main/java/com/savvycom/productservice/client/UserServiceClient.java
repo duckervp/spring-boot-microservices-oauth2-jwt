@@ -1,6 +1,6 @@
 package com.savvycom.productservice.client;
 
-import com.savvycom.productservice.domain.UserOutput;
+import com.savvycom.productservice.domain.model.UserOutput;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 

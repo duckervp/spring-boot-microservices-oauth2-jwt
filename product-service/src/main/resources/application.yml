@@ -1,12 +1,5 @@
 security:
   oauth2:
-    client:
-      userInfoUri: http://localhost:3001/uaa/auth/user
-      clientId: user-service
-      clientSecret: user-service
-      accessTokenUri: http://localhost:3001/uaa/oauth/token
-      grant-type: client_credentials
-      scope: server
     resource:
       userInfoUri: http://localhost:3001/uaa/auth/user
 
