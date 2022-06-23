@@ -1,7 +1,8 @@
-package com.savvycom.addressservice.service;
+package com.savvycom.addressservice.service.impl;
 
 import com.savvycom.addressservice.domain.entity.Address;
 import com.savvycom.addressservice.repository.AddressRepository;
+import com.savvycom.addressservice.service.IAddressService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class AddressServiceImpl implements AddressService {
+public class AddressService implements IAddressService {
     private final AddressRepository addressRepository;
 
     private final ModelMapper modelMapper;

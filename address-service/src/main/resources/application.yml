@@ -1,20 +1,13 @@
 security:
   oauth2:
-    client:
-      userInfoUri: http://localhost:3001/uaa/auth/user
-      clientId: user-service
-      clientSecret: user-service
-      accessTokenUri: http://localhost:3001/uaa/oauth/token
-      grant-type: client_credentials
-      scope: server
     resource:
-      userInfoUri: http://localhost:3001/uaa/auth/user
+      userInfoUri: http://localhost:3001/auth/user
 
 spring:
   main:
     allow-bean-definition-overriding: true
   application:
-    name: user-service
+    name: address-service
   jpa:
     databasePlatform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
@@ -25,7 +18,7 @@ spring:
     username: root
     password: root
 server:
-  port: 3002
+  port: 3003
 
 eureka:
   client:

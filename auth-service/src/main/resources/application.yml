@@ -12,8 +12,6 @@ spring:
     password: root
 server:
   port: 3001
-  servlet:
-    contextPath: /uaa
 
 eureka:
   client:
@@ -25,7 +23,7 @@ security:
     client:
       clientId: client
       clientSecret: client@2022
-      accessTokenValiditySeconds: 900
+      accessTokenValiditySeconds: 18000
       refreshTokenValiditySeconds: 18000
 encrypt:
   keyStore:

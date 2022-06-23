@@ -1,3 +1,7 @@
+service:
+  order: 192.168.196.140
+  product: 192.168.196.190
+
 spring:
   application:
     name: gateway
@@ -8,22 +12,28 @@ spring:
           uri:
             http://${SERVICE0_HOST:localhost}:${SERVICE0_PORT:3001}/
           predicates:
-            - Path=/uaa/oauth/**, /uaa/auth/**
+            - Path=/oauth/**, /auth/**
         - id: ${SERVICE1_NAME:user-service}
           uri:
             http://${SERVICE1_HOST:localhost}:${SERVICE1_PORT:3002}/
           predicates:
-            - Path=${SERVICE1_PATH:/api/users}/**
+            - Path=${SERVICE1_PATH:/user}/**
         - id: ${SERVICE2_NAME:product-service}
           uri:
-            http://${SERVICE2_HOST:10.22.5.136}:${SERVICE2_PORT:8001}/
+            http://${service.product}:${SERVICE2_PORT:8001}/
           predicates:
-            - Path=${SERVICE2_PATH:/api/product}/**
+            - Path=/product/**, /line/**, /branch/**, /inventory/**, /discount/**, /review/**, /category/**
         - id: ${SERVICE3_NAME:order-service}
           uri:
-            http://${SERVICE3_HOST:10.22.5.133}:${SERVICE3_PORT:8080}/
+            http://${service.order}:${SERVICE3_PORT:8080}/
           predicates:
-            - Path=${SERVICE3_PATH:/api/order}/**
+            - Path=${SERVICE3_PATH:/order}/**
+        - id: ${SERVICE4_NAME:address-service}
+          uri:
+            http://${SERVICE4_HOST:localhost}:${SERVICE4_PORT:3003}/
+          predicates:
+            - Path=${SERVICE4_PATH:/address}/**
+
 server:
   port: ${SERVER_PORT:8762}
 eureka:

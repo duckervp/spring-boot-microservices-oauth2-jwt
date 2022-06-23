@@ -1,5 +1,6 @@
 package com.savvycom.userservice.controller;
 
+import com.savvycom.userservice.exception.UserAlreadyExistException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -9,13 +10,22 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
 public class ControllerExceptionHandler extends BaseController {
+    @ExceptionHandler({ UserAlreadyExistException.class })
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<?> handleException(UserAlreadyExistException e) {
+        return failedResponse(
+                HttpStatus.UNPROCESSABLE_ENTITY.value() + "",
+                e.getMessage(),
+                "UserAlreadyExistException");
+    }
+
     @ExceptionHandler({ MethodArgumentNotValidException.class })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<?> handleException(MethodArgumentNotValidException e) {
         return failedResponse(
                 HttpStatus.BAD_REQUEST.value() + "",
                 e.getMessage(),
-                null);
+                "MethodArgumentNotValidException");
     }
 
     @ExceptionHandler({ IllegalArgumentException.class })
@@ -24,7 +34,7 @@ public class ControllerExceptionHandler extends BaseController {
         return failedResponse(
                 HttpStatus.BAD_REQUEST.value() + "",
                 e.getMessage(),
-                null);
+                "IllegalArgumentException");
     }
 
     @ExceptionHandler({ Exception.class })
@@ -33,6 +43,6 @@ public class ControllerExceptionHandler extends BaseController {
         return failedResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value() + "",
                 e.getMessage(),
-                null);
+                "Exception");
     }
 }

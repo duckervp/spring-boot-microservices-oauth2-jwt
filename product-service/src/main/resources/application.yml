@@ -1,7 +1,7 @@
 security:
   oauth2:
     resource:
-      userInfoUri: http://localhost:3001/uaa/auth/user
+      userInfoUri: http://localhost:3001/auth/user
 
 spring:
   main:
@@ -18,7 +18,7 @@ spring:
     username: root
     password: root
 server:
-  port: 3003
+  port: 3004
 
 eureka:
   client:

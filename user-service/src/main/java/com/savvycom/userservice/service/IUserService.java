@@ -5,10 +5,12 @@ import com.savvycom.userservice.domain.model.UserOutput;
 
 import java.util.List;
 
-public interface UserService {
+public interface IUserService {
     List<UserOutput> findAll();
 
     boolean existsByUsername(String username);
 
-    User save(User user);
+    User register(User user);
+
+    UserOutput findById(Long id);
 }
