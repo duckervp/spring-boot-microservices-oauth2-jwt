@@ -4,10 +4,7 @@ import com.savvycom.userservice.common.HttpStatusCode;
 import com.savvycom.userservice.domain.entity.Payment;
 import com.savvycom.userservice.domain.message.BaseMessage;
 import com.savvycom.userservice.domain.message.ExtendedMessage;
-import com.savvycom.userservice.domain.model.UserInput;
-import com.savvycom.userservice.domain.model.UserPasswordForgotInput;
-import com.savvycom.userservice.domain.model.UserPasswordResetInput;
-import com.savvycom.userservice.domain.model.UserPasswordUpdateInput;
+import com.savvycom.userservice.domain.model.*;
 import com.savvycom.userservice.exception.UserAlreadyExistException;
 import com.savvycom.userservice.service.IPaymentService;
 import com.savvycom.userservice.service.IUserService;
@@ -52,7 +49,7 @@ public class UserController extends BaseController {
                                 .scheme("bearer")
                                 .bearerFormat("JWT")))
                 .info(new Info().title("Your API").version(appVersion)
-                        .license(new License().name("Apache 2.0").url("http://springdoc.org")));
+                        .license(new License().name("Apache 2.0").url("https://springdoc.org/")));
     }
 
 
@@ -104,6 +101,9 @@ public class UserController extends BaseController {
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ExtendedMessage.class)) })
     @ApiResponse(responseCode = HttpStatusCode.BAD_REQUEST, description = "Invalid input",
+            content = { @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = BaseMessage.class)) })
+    @ApiResponse(responseCode = HttpStatusCode.NOT_FOUND, description = "Not found any user with username provided",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = BaseMessage.class)) })
     @ApiResponse(responseCode = HttpStatusCode.INTERNAL_SERVER_ERROR, description = "Internal Server Error",
@@ -161,10 +161,13 @@ public class UserController extends BaseController {
      */
     @GetMapping("/{userId}")
     @Operation(summary = "Find specific user information", security = {@SecurityRequirement(name = "authorization-header")})
-    @ApiResponse(responseCode = HttpStatusCode.OK, description = "Return user information",
+    @ApiResponse(responseCode = HttpStatusCode.OK, description = "Success",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ExtendedMessage.class)) })
-    @ApiResponse(responseCode = HttpStatusCode.BAD_REQUEST, description = "Invalid input",
+    @ApiResponse(responseCode = HttpStatusCode.BAD_REQUEST, description = "Invalid userId",
+            content = { @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = BaseMessage.class)) })
+    @ApiResponse(responseCode = HttpStatusCode.NOT_FOUND, description = "Not found any user with userId provided",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = BaseMessage.class)) })
     @ApiResponse(responseCode = HttpStatusCode.INTERNAL_SERVER_ERROR, description = "Internal Server Error",
@@ -174,6 +177,27 @@ public class UserController extends BaseController {
         return successResponse(userService.findById(userId));
     }
 
+    @PostMapping("/{userId}")
+    @Operation(summary = "Find specific user information", security = {@SecurityRequirement(name = "authorization-header")})
+    @ApiResponse(responseCode = HttpStatusCode.OK, description = "Success",
+            content = { @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ExtendedMessage.class)) })
+    @ApiResponse(responseCode = HttpStatusCode.BAD_REQUEST, description = "Invalid input",
+            content = { @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = BaseMessage.class)) })
+    @ApiResponse(responseCode = HttpStatusCode.NOT_FOUND, description = "Not found any user with userId provided",
+            content = { @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = BaseMessage.class)) })
+    @ApiResponse(responseCode = HttpStatusCode.INTERNAL_SERVER_ERROR, description = "Internal Server Error",
+            content = { @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = BaseMessage.class)) })
+    public ResponseEntity<?> updateUser(@PathVariable Long userId, @Valid @RequestBody UserUpdateInput userUpdateInput) {
+        userService.update(userId, userUpdateInput);
+        return successResponse("Update user successfully");
+    }
+
+
+
     /**
      * Find all payment methods of a user
      * @param userId Long type
@@ -182,7 +206,7 @@ public class UserController extends BaseController {
      */
     @GetMapping("/{userId}/payment")
     @Operation(summary = "Find all payment methods of a user", security = {@SecurityRequirement(name = "authorization-header")})
-    @ApiResponse(responseCode = HttpStatusCode.OK, description = "Return all payment methods of a user",
+    @ApiResponse(responseCode = HttpStatusCode.OK, description = "Success",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ExtendedMessage.class)) })
     @ApiResponse(responseCode = HttpStatusCode.BAD_REQUEST, description = "Invalid input",

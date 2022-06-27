@@ -16,11 +16,11 @@ spring:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:db_user}?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
     username: root
-    password: root
+    password: ENC(T5/NKcOjFiYB/01F1oASPw==)
   mail:
     host: smtp.gmail.com
     username: duc.trantrung99@gmail.com
-    password: bvxedzgjcmmmmweq
+    password: ENC(O55yp9uj/S7myBJKQJZh1jwosoyyY2s+HUscOxVaozc=)
     port: 587
     properties:
       mail:

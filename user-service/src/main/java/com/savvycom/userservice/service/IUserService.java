@@ -13,6 +13,8 @@ import java.util.List;
 public interface IUserService {
     List<UserOutput> findAll();
 
+    boolean existsById(Long id);
+
     boolean existsByUsername(String username);
 
     void register(UserInput userInput);
@@ -28,4 +30,5 @@ public interface IUserService {
     User updatePasswordResetToken(String username, String resetPasswordToken);
 
    void resetPassword(String passwordResetToken, String newPassword);
+
 }

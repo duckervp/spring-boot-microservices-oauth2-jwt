@@ -45,6 +45,11 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public boolean existsById(Long id) {
+        return userRepository.existsById(id);
+    }
+
+    @Override
     public boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
     }
@@ -58,7 +63,7 @@ public class UserService implements IUserService {
         user.setRole(RoleType.USER);
         user.setActive(StatusType.ACTIVE);
         user = userRepository.save(user);
-        paymentService.createCashInHandsPayment(user.getId());
+        paymentService.createCashInHandPayment(user.getId());
     }
 
     @Override

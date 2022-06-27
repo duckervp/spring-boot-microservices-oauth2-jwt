@@ -14,5 +14,5 @@ public interface IPaymentService {
 
     void save(Payment payment);
 
-    void createCashInHandsPayment(Long userId);
+    void createCashInHandPayment(Long userId);
 }
