@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Configuration
 @Component
 @Getter
-public class ResourcesConfig {
+public class ServiceConfig {
     @Value("${security.oauth2.client.clientId}")
     private String clientId;
 

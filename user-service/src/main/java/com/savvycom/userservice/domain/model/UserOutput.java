@@ -11,11 +11,13 @@ import java.util.Date;
 @AllArgsConstructor
 public class UserOutput {
     private Long id;
-    private String firstName;
-    private String lastName;
+    private String name;
+    private String gender;
+    private String address;
     private String phone;
     private String role;
     private String avatar;
+    private Integer active;
     private Date createdAt;
     private Date modifiedAt;
 }

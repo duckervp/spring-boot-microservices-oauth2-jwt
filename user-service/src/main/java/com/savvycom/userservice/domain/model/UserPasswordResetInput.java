@@ -1,7 +1,6 @@
 package com.savvycom.userservice.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.savvycom.userservice.util.validation.ValidEmail;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,17 +12,12 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserPasswordUpdateInput {
-    @ValidEmail(message = "Username must be a valid email")
-    @Schema(description = "User email")
-    private String username;
-
-    @NotBlank(message = "Password must not be null or empty")
-    @Schema(description = "User account old password")
-    private String password;
+public class UserPasswordResetInput {
+    @NotBlank(message = "Password reset token must not be null or empty")
+    @Schema(description = "Password reset token")
+    private String passwordResetToken;
 
     @NotBlank(message = "New password must not be null or empty")
     @Schema(description = "User account new password")
     private String newPassword;
-
 }

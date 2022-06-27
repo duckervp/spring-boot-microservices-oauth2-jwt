@@ -12,27 +12,18 @@ public class ControllerExceptionHandler extends BaseController {
     @ExceptionHandler({ MethodArgumentNotValidException.class })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<?> handleException(MethodArgumentNotValidException e) {
-        return failedResponse(
-                HttpStatus.BAD_REQUEST.value() + "",
-                e.getMessage(),
-                null);
+        return failedResponse(HttpStatus.BAD_REQUEST.value() + "", e.getMessage());
     }
 
     @ExceptionHandler({ IllegalArgumentException.class })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<?> handleException(IllegalArgumentException e) {
-        return failedResponse(
-                HttpStatus.BAD_REQUEST.value() + "",
-                e.getMessage(),
-                null);
+        return failedResponse(HttpStatus.BAD_REQUEST.value() + "", e.getMessage());
     }
 
     @ExceptionHandler({ Exception.class })
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<?> handleException(Exception e) {
-        return failedResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.value() + "",
-                e.getMessage(),
-                null);
+        return failedResponse(HttpStatus.INTERNAL_SERVER_ERROR.value() + "", e.getMessage());
     }
 }

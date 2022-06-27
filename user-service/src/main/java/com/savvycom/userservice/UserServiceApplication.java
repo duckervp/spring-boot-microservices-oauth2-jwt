@@ -1,6 +1,7 @@
 package com.savvycom.userservice;
 
-import lombok.RequiredArgsConstructor;
+import com.savvycom.userservice.config.OAuth2FeignInterceptor;
+import feign.RequestInterceptor;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,8 +18,12 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @EnableOAuth2Client
 @EnableFeignClients
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-@RequiredArgsConstructor
 public class UserServiceApplication {
+	@Bean
+	public RequestInterceptor requestInterceptor() {
+		return new OAuth2FeignInterceptor();
+	}
+
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();

@@ -23,7 +23,7 @@ import java.util.Arrays;
 @EnableAuthorizationServer
 @RequiredArgsConstructor
 public class JWTOAuth2Config extends AuthorizationServerConfigurerAdapter {
-    private final ResourcesConfig resourcesConfig;
+    private final ServiceConfig serviceConfig;
 
     private final TokenStore tokenStore;
 
@@ -40,12 +40,12 @@ public class JWTOAuth2Config extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
-                .withClient(resourcesConfig.getClientId())
-                .secret(passwordEncoder.encode(resourcesConfig.getClientSecret()))
+                .withClient(serviceConfig.getClientId())
+                .secret(passwordEncoder.encode(serviceConfig.getClientSecret()))
                 .authorizedGrantTypes("refresh_token", "password")
                 .scopes("ui")
-                .accessTokenValiditySeconds(resourcesConfig.getAccessTokenValiditySeconds())
-                .refreshTokenValiditySeconds(resourcesConfig.getRefreshTokenValiditySeconds());
+                .accessTokenValiditySeconds(serviceConfig.getAccessTokenValiditySeconds())
+                .refreshTokenValiditySeconds(serviceConfig.getRefreshTokenValiditySeconds());
     }
 
     @Override

@@ -11,5 +11,4 @@ public class BaseMessage {
     private String code;
     private Boolean success;
     private String message;
-    private String description;
 }

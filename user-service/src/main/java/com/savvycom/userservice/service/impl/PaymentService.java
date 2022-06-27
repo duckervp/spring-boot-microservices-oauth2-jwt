@@ -2,7 +2,7 @@ package com.savvycom.userservice.service.impl;
 
 import com.savvycom.userservice.domain.entity.Payment;
 import com.savvycom.userservice.domain.model.PaymentOutput;
-import com.savvycom.userservice.domain.model.PaymentType;
+import com.savvycom.userservice.common.PaymentType;
 import com.savvycom.userservice.repository.PaymentRepository;
 import com.savvycom.userservice.service.IPaymentService;
 import lombok.RequiredArgsConstructor;

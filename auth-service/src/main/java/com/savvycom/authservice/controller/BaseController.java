@@ -7,34 +7,25 @@ import org.springframework.http.ResponseEntity;
 
 public class BaseController {
 
-    public <T> ResponseEntity<?> successResponse(String message, String description, T data) {
+    public <T> ResponseEntity<?> successResponse(String message, T data) {
         ExtendedMessage<T> responseMessage =  new ExtendedMessage<>(
                 HttpStatus.OK.value() + "",
                 true,
                 message,
-                description,
                 data);
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
-    public <T> ResponseEntity<?> successResponse(String message, T data) {
-        return successResponse(message, null, data);
+    public <T> ResponseEntity<?> successResponse(String message) {
+        return successResponse(message, null);
     }
 
     public <T> ResponseEntity<?> successResponse(T data) {
-        return successResponse(null, null, data);
+        return successResponse(null, data);
     }
 
-    public ResponseEntity<?> successResponse() {
-        return successResponse(null, null, null);
-    }
-
-    public ResponseEntity<?> failedResponse(String code, String message, String description) {
-        BaseMessage responseMessage = new BaseMessage(
-                code,
-                false,
-                message,
-                description);
+    public ResponseEntity<?> failedResponse(String code, String message) {
+        BaseMessage responseMessage = new BaseMessage(code, false, message);
         return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(Integer.parseInt(code)));
     }
 }
