@@ -1,7 +1,7 @@
 package com.savvycom.userservice.service;
 
 import com.savvycom.userservice.domain.entity.Payment;
-import com.savvycom.userservice.domain.model.PaymentOutput;
+import com.savvycom.userservice.domain.model.getPayment.PaymentOutput;
 
 import java.util.List;
 

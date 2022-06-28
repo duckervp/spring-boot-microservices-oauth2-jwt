@@ -12,9 +12,9 @@ public class StringEncrypt {
             System.out.print("Enter original string to encrypt: ");
             String originalStr = scanner.nextLine();
             System.out.println("Encrypted string: " + stringEncryptorConfig.stringEncryptor().encrypt(originalStr));
-            System.out.print("Exit? [y/n]");
-            String exit = scanner.nextLine();
-            if (exit.equals("y")) break;
+            System.out.print("Continue? [y/n]: ");
+            String isContinue = scanner.nextLine();
+            if (isContinue.equals("n")) break;
         }
     }
 }

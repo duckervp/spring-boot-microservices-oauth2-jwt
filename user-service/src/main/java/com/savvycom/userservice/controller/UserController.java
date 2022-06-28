@@ -1,11 +1,21 @@
 package com.savvycom.userservice.controller;
 
+import com.savvycom.userservice.common.DefaultPagination;
 import com.savvycom.userservice.common.HttpStatusCode;
 import com.savvycom.userservice.domain.entity.Payment;
+import com.savvycom.userservice.domain.entity.User;
 import com.savvycom.userservice.domain.message.BaseMessage;
 import com.savvycom.userservice.domain.message.ExtendedMessage;
-import com.savvycom.userservice.domain.model.*;
-import com.savvycom.userservice.exception.UserAlreadyExistException;
+import com.savvycom.userservice.domain.model.getPayment.PaymentOutputResponse;
+import com.savvycom.userservice.domain.model.getPayment.PaymentOutputsResponse;
+import com.savvycom.userservice.domain.model.getUser.UserOutputResponse;
+import com.savvycom.userservice.domain.model.getUser.UserOutputsResponse;
+import com.savvycom.userservice.domain.model.pagging.PageOutputResponse;
+import com.savvycom.userservice.domain.model.register.UserInput;
+import com.savvycom.userservice.domain.model.resetPassword.UserPasswordForgotInput;
+import com.savvycom.userservice.domain.model.resetPassword.UserPasswordResetInput;
+import com.savvycom.userservice.domain.model.updatePassword.UserPasswordUpdateInput;
+import com.savvycom.userservice.domain.model.updateUser.UserUpdateInput;
 import com.savvycom.userservice.service.IPaymentService;
 import com.savvycom.userservice.service.IUserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,6 +39,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,6 +49,11 @@ public class UserController extends BaseController {
 
     private final IPaymentService paymentService;
 
+    /**
+     * Custom validate bearer token function on swagger ui
+     * @param appVersion spring docs version in pom.xml
+     * @return OpenAPI model
+     */
     @Bean
     public OpenAPI customOpenAPI(@Value("1.5.9") String appVersion) {
         var securitySchemeName = "authorization-header";
@@ -55,32 +71,36 @@ public class UserController extends BaseController {
 
     /**
      * For user registration
+     * After register user successful then create a base payment method - cash in hand for each user
      * @param userInput entity
      * @return success response
-     * @throws UserAlreadyExistException when username existed
+     * or failed response (handle UserAlreadyExistException when username existed)
      */
     @PostMapping()
     @Operation(summary = "Register a new account")
-    @ApiResponse(responseCode = HttpStatusCode.OK, description = "Register successfully",
+    @ApiResponse(responseCode = HttpStatusCode.OK, description = "Register successful",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ExtendedMessage.class)) })
     @ApiResponse(responseCode = HttpStatusCode.BAD_REQUEST, description = "Invalid input",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = BaseMessage.class)) })
-    @ApiResponse(responseCode = HttpStatusCode.UNPROCESSABLE_ENTITY, description = "There is an account with the email provided",
-            content = { @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = BaseMessage.class)) })
     @ApiResponse(responseCode = HttpStatusCode.INTERNAL_SERVER_ERROR, description = "Internal Server Error",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = BaseMessage.class)) })
-    public ResponseEntity<?> register(@RequestBody @Validated @Valid UserInput userInput) throws UserAlreadyExistException {
-        userService.register(userInput);
+    public ResponseEntity<?> register(@RequestBody @Validated @Valid UserInput userInput) {
+        User user = userService.register(userInput);
+        paymentService.createCashInHandPayment(user.getId());
         return successResponse("Register successfully!");
     }
 
+    /**
+     * This function change user password in a normal way
+     * @param userPasswordUpdateInput username, password and newPassword
+     * @return Success response or failed response (handle Exception when username is invalid)
+     */
     @PostMapping("/updatePassword")
     @Operation(summary = "Update password of a user")
-    @ApiResponse(responseCode = HttpStatusCode.OK, description = "Password update successfully",
+    @ApiResponse(responseCode = HttpStatusCode.OK, description = "Update password successful",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ExtendedMessage.class)) })
     @ApiResponse(responseCode = HttpStatusCode.BAD_REQUEST, description = "Invalid input",
@@ -94,16 +114,20 @@ public class UserController extends BaseController {
         return successResponse("Update password successfully!");
     }
 
-
+    /**
+     * When user send a forgot password request, this function create a passwordResetToken
+     * and send an email with the reset password link contains the token to the user
+     * @param userPasswordForgotInput user email as username
+     * @return Success response or Exception(UserNotFoundException) or the two exceptions below
+     * @throws MessagingException when email can not be sent
+     * @throws UnsupportedEncodingException when email can not be sent
+     */
     @PostMapping("/forgotPassword")
-    @Operation(summary = "Send a password reset email to user when a user forgot password")
-    @ApiResponse(responseCode = HttpStatusCode.OK, description = "Password reset email successfully sent to user",
+    @Operation(summary = "Send a password reset email to user")
+    @ApiResponse(responseCode = HttpStatusCode.OK, description = "Success",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ExtendedMessage.class)) })
     @ApiResponse(responseCode = HttpStatusCode.BAD_REQUEST, description = "Invalid input",
-            content = { @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = BaseMessage.class)) })
-    @ApiResponse(responseCode = HttpStatusCode.NOT_FOUND, description = "Not found any user with username provided",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = BaseMessage.class)) })
     @ApiResponse(responseCode = HttpStatusCode.INTERNAL_SERVER_ERROR, description = "Internal Server Error",
@@ -115,6 +139,12 @@ public class UserController extends BaseController {
         return successResponse(message);
     }
 
+    /**
+     * This function change user password in case user forgot password
+     * After user click reset password link in the email and type a new password
+     * @param userPasswordResetInput contains passwordResetToken and new password
+     * @return Success response or Exception when passwordResetToken is invalid
+     */
     @PostMapping("/resetPassword")
     @Operation(summary = "Do reset user password")
     @ApiResponse(responseCode = HttpStatusCode.OK, description = "Password reset successfully",
@@ -142,32 +172,34 @@ public class UserController extends BaseController {
     @Operation(summary = "Find all users", security = {@SecurityRequirement(name = "authorization-header")})
     @ApiResponse(responseCode = HttpStatusCode.OK, description = "Return all users",
             content = { @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ExtendedMessage.class)) })
+                    schema = @Schema(implementation = PageOutputResponse.class)) })
     @ApiResponse(responseCode = HttpStatusCode.BAD_REQUEST, description = "Invalid input",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = BaseMessage.class)) })
     @ApiResponse(responseCode = HttpStatusCode.INTERNAL_SERVER_ERROR, description = "Internal Server Error",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = BaseMessage.class)) })
-    public ResponseEntity<?> findAll() {
-        return successResponse(userService.findAll());
+    public ResponseEntity<?> findAll(
+            @RequestParam(required = false, defaultValue = DefaultPagination.PAGE_NUMBER) Integer pageNo,
+            @RequestParam(required = false, defaultValue = DefaultPagination.PAGE_SIZE) Integer pageSize,
+            @RequestParam(required = false, defaultValue = DefaultPagination.SORT_BY) String sortBy,
+            @RequestParam(required = false, defaultValue = DefaultPagination.SORT_DIRECTION) String sortDir) {
+        return successResponse(userService.findAll(pageNo, pageSize, sortBy, sortDir));
     }
 
     /**
      * Find specific user information
      * @param userId Long type
      * @return success response with UserOutput object
-     *      or failed response with IllegalArgumentException
+     *      or failed response
      */
+    @PreAuthorize("hasAuthority('admin') or @userSecurity.hasUserId(authentication,#userId)")
     @GetMapping("/{userId}")
     @Operation(summary = "Find specific user information", security = {@SecurityRequirement(name = "authorization-header")})
     @ApiResponse(responseCode = HttpStatusCode.OK, description = "Success",
             content = { @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ExtendedMessage.class)) })
+                    schema = @Schema(implementation = UserOutputResponse.class)) })
     @ApiResponse(responseCode = HttpStatusCode.BAD_REQUEST, description = "Invalid userId",
-            content = { @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = BaseMessage.class)) })
-    @ApiResponse(responseCode = HttpStatusCode.NOT_FOUND, description = "Not found any user with userId provided",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = BaseMessage.class)) })
     @ApiResponse(responseCode = HttpStatusCode.INTERNAL_SERVER_ERROR, description = "Internal Server Error",
@@ -177,15 +209,37 @@ public class UserController extends BaseController {
         return successResponse(userService.findById(userId));
     }
 
+    /**
+     * @param userIds list of user id
+     * @return success response with list of user corresponding with list id provided
+     */
+    @GetMapping("/ids")
+    @Operation(summary = "Find users information by list of user id", security = {@SecurityRequirement(name = "authorization-header")})
+    @ApiResponse(responseCode = HttpStatusCode.OK, description = "Success",
+            content = { @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = UserOutputsResponse.class)) })
+    @ApiResponse(responseCode = HttpStatusCode.BAD_REQUEST, description = "Invalid userId",
+            content = { @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = BaseMessage.class)) })
+    @ApiResponse(responseCode = HttpStatusCode.INTERNAL_SERVER_ERROR, description = "Internal Server Error",
+            content = { @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = BaseMessage.class)) })
+    public ResponseEntity<?> findByIds(@RequestParam List<Long> userIds) {
+        return successResponse(userService.findByIds(userIds));
+    }
+
+    /**
+     * Update user information by id
+     * @param userId id of user
+     * @param userUpdateInput contains information that user want to update
+     * @return success response or failed response when user info is invalid
+     */
     @PostMapping("/{userId}")
-    @Operation(summary = "Find specific user information", security = {@SecurityRequirement(name = "authorization-header")})
+    @Operation(summary = "Update user information", security = {@SecurityRequirement(name = "authorization-header")})
     @ApiResponse(responseCode = HttpStatusCode.OK, description = "Success",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ExtendedMessage.class)) })
     @ApiResponse(responseCode = HttpStatusCode.BAD_REQUEST, description = "Invalid input",
-            content = { @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = BaseMessage.class)) })
-    @ApiResponse(responseCode = HttpStatusCode.NOT_FOUND, description = "Not found any user with userId provided",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = BaseMessage.class)) })
     @ApiResponse(responseCode = HttpStatusCode.INTERNAL_SERVER_ERROR, description = "Internal Server Error",
@@ -202,13 +256,13 @@ public class UserController extends BaseController {
      * Find all payment methods of a user
      * @param userId Long type
      * @return success response with List<PaymentOutput>
-     *     or failed response with IllegalArgumentException
+     *     or failed response
      */
     @GetMapping("/{userId}/payment")
     @Operation(summary = "Find all payment methods of a user", security = {@SecurityRequirement(name = "authorization-header")})
     @ApiResponse(responseCode = HttpStatusCode.OK, description = "Success",
             content = { @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ExtendedMessage.class)) })
+                    schema = @Schema(implementation = PaymentOutputsResponse.class)) })
     @ApiResponse(responseCode = HttpStatusCode.BAD_REQUEST, description = "Invalid input",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = BaseMessage.class)) })
@@ -246,13 +300,13 @@ public class UserController extends BaseController {
      * Find a payment by id
      * @param paymentId Long type
      * @return success response with PaymentOutput object
-     *      or failed response with IllegalArgumentException
+     *      or failed response
      */
     @GetMapping("/payment/{paymentId}")
     @Operation(summary = "Find a payment by id", security = {@SecurityRequirement(name = "authorization-header")})
     @ApiResponse(responseCode = HttpStatusCode.OK, description = "Return a payment information",
             content = { @Content(mediaType = "application/json",
-                    schema = @Schema(implementation = ExtendedMessage.class)) })
+                    schema = @Schema(implementation = PaymentOutputResponse.class)) })
     @ApiResponse(responseCode = HttpStatusCode.BAD_REQUEST, description = "Invalid input",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = BaseMessage.class)) })

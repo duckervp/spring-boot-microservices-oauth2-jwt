@@ -4,17 +4,23 @@ import com.savvycom.userservice.common.RoleType;
 import com.savvycom.userservice.common.StatusType;
 import com.savvycom.userservice.config.ServiceConfig;
 import com.savvycom.userservice.domain.entity.User;
-import com.savvycom.userservice.domain.model.*;
+import com.savvycom.userservice.domain.model.getUser.UserOutput;
+import com.savvycom.userservice.domain.model.pagging.PageOutput;
+import com.savvycom.userservice.domain.model.register.UserInput;
+import com.savvycom.userservice.domain.model.updatePassword.UserPasswordUpdateInput;
+import com.savvycom.userservice.domain.model.updateUser.UserUpdateInput;
 import com.savvycom.userservice.exception.PasswordResetTokenInvalidException;
 import com.savvycom.userservice.exception.UserAlreadyExistException;
 import com.savvycom.userservice.exception.UserNotFoundException;
 import com.savvycom.userservice.exception.UsernamePasswordIncorrectException;
 import com.savvycom.userservice.repository.UserRepository;
-import com.savvycom.userservice.service.IPaymentService;
 import com.savvycom.userservice.service.IUserService;
 import com.savvycom.userservice.util.Mail;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,14 +40,25 @@ public class UserService implements IUserService {
 
     private final UserRepository userRepository;
 
-    private final IPaymentService paymentService;
     private final ModelMapper modelMapper;
 
     @Override
-    public List<UserOutput> findAll() {
-        return userRepository.findAll().stream()
+    public PageOutput<UserOutput> findAll(Integer pageNo, Integer pageSize, String sortBy, String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() :
+                Sort.by(sortBy).descending();
+        Page<User> users = userRepository.findAll(PageRequest.of(pageNo, pageSize, sort));
+        List<UserOutput> userOutputs = users.getContent().stream()
                 .map(user -> modelMapper.map(user, UserOutput.class))
                 .collect(Collectors.toList());
+
+        PageOutput<UserOutput> pageOutput = new PageOutput<>();
+        pageOutput.setContent(userOutputs);
+        pageOutput.setPageNo(pageNo);
+        pageOutput.setPageSize(pageSize);
+        pageOutput.setTotalElements(users.getTotalElements());
+        pageOutput.setTotalPages(users.getTotalPages());
+        pageOutput.setLast(users.isLast());
+        return pageOutput;
     }
 
     @Override
@@ -55,15 +72,15 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void register(UserInput userInput) {
+    public User register(UserInput userInput) {
         User user = modelMapper.map(userInput, User.class);
         if (existsByUsername(user.getUsername()))
             throw new UserAlreadyExistException("There is an account with email " + user.getUsername());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(RoleType.USER);
         user.setActive(StatusType.ACTIVE);
-        user = userRepository.save(user);
-        paymentService.createCashInHandPayment(user.getId());
+        user.setCreatedAt(new Date());
+        return userRepository.save(user);
     }
 
     @Override
@@ -82,6 +99,7 @@ public class UserService implements IUserService {
         if (Objects.nonNull(userUpdateInput.getAddress())) user.setName(user.getAddress());
         if (Objects.nonNull(userUpdateInput.getPhone())) user.setName(user.getPhone());
         if (Objects.nonNull(userUpdateInput.getAvatar())) user.setName(user.getAvatar());
+        user.setModifiedAt(new Date());
         userRepository.save(user);
     }
 
@@ -91,6 +109,7 @@ public class UserService implements IUserService {
         if (Objects.isNull(user)) throw new UsernamePasswordIncorrectException("Wrong username or password!");
         if (passwordEncoder.matches(input.getPassword(), user.getPassword())) {
             user.setPassword(input.getNewPassword());
+            user.setModifiedAt(new Date());
             userRepository.save(user);
         } else {
             throw new UsernamePasswordIncorrectException("Wrong username or password!");
@@ -119,6 +138,7 @@ public class UserService implements IUserService {
         user.setPassword(passwordEncoder.encode(newPassword));
         user.setPasswordResetToken(null);
         user.setPasswordResetTokenExpiryDate(null);
+        user.setModifiedAt(new Date());
         userRepository.save(user);
     }
 
@@ -132,6 +152,19 @@ public class UserService implements IUserService {
         calendar.add(Calendar.HOUR_OF_DAY, serviceConfig.getPasswordResetTokenValidityHours());
         Date expiryDate = calendar.getTime();
         user.setPasswordResetTokenExpiryDate(expiryDate);
+        user.setModifiedAt(new Date());
         return userRepository.save(user);
+    }
+
+    /**
+     * find users by provide a list of user id
+     * @param ids list of user id
+     * @return list of userOutput
+     */
+    @Override
+    public List<UserOutput> findByIds(List<Long> ids) {
+        return userRepository.findByIdIn(ids).stream()
+                .map(user -> modelMapper.map(user, UserOutput.class))
+                .collect(Collectors.toList());
     }
 }

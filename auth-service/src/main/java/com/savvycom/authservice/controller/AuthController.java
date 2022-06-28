@@ -6,6 +6,7 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,5 +29,4 @@ public class AuthController {
 		userInfo.put("scope", authentication.getOAuth2Request().getScope());
 		return new ResponseEntity<>(userInfo, HttpStatus.OK);
 	}
-
 }

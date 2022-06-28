@@ -38,6 +38,6 @@ eureka:
 
 
 ui:
-  url: http:localhost:8888
+  url: http://localhost:8888
 
 passwordResetTokenValidityHours: 24

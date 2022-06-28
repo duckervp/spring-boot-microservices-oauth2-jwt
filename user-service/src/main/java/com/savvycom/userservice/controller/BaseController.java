@@ -16,7 +16,7 @@ public class BaseController {
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
-    public <T> ResponseEntity<?> successResponse(String message) {
+    public ResponseEntity<?> successResponse(String message) {
         return successResponse(message, null);
     }
 
@@ -25,7 +25,8 @@ public class BaseController {
     }
 
     public ResponseEntity<?> failedResponse(String code, String message) {
-        BaseMessage responseMessage = new BaseMessage(code, false, message);
+        String prefix = "[User Service]";
+        BaseMessage responseMessage = new BaseMessage(code, false, String.format("%s %s", prefix, message));
         return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(Integer.parseInt(code)));
     }
 }
