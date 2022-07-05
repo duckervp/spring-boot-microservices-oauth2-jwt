@@ -15,6 +15,10 @@ import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFacto
 public class JWTTokenStoreConfig {
     private final ServiceConfig serviceConfig;
 
+    /**
+     * Signing our access token by asymmetric keypair from keystore file
+     * @return JwtAccessTokenConverter
+     */
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();

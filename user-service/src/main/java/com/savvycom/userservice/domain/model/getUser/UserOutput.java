@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -13,6 +14,9 @@ import java.util.Date;
 public class UserOutput {
     @Schema(description = "User id")
     private Long id;
+
+    @Schema(description = "User email")
+    private String username;
 
     @Schema(description = "User name")
     private String name;
@@ -36,8 +40,8 @@ public class UserOutput {
     private Integer active;
 
     @Schema(description = "Created time")
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @Schema(description = "Updated time")
-    private Date modifiedAt;
+    private LocalDateTime modifiedAt;
 }

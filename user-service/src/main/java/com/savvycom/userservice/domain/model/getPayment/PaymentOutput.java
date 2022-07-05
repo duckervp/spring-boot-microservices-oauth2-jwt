@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -26,8 +26,8 @@ public class PaymentOutput {
 	private String number;
 
 	@Schema(description = "Created time")
-	private Date createdAt;
+	private LocalDateTime createdAt;
 
 	@Schema(description = "Updated time")
-	private Date modifiedAt;
+	private LocalDateTime modifiedAt;
 }

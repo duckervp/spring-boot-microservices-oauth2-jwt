@@ -25,10 +25,7 @@ public class EmailValidator implements ConstraintValidator<ValidEmail, String> {
     private boolean validateEmail(String email) {
         pattern = Pattern.compile(EMAIL_REGEX);
         matcher = pattern.matcher(email);
-        if (!matcher.matches()) {
-//            throw new EmailInvalidException("Invalid email");
-            return false;
-        }
-        return true;
+        if (matcher.matches()) return true;
+        return false;
     }
 }

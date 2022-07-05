@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -27,9 +28,9 @@ public class User {
 	private String phone;
 	private String role;
 	private String avatar;
-	private Integer active;
-	private Date createdAt;
-	private Date modifiedAt;
+	private boolean active;
+	private LocalDateTime createdAt;
+	private LocalDateTime modifiedAt;
 	private String passwordResetToken;
-	private Date passwordResetTokenExpiryDate;
+	private LocalDateTime passwordResetTokenExpiryDate;
 }

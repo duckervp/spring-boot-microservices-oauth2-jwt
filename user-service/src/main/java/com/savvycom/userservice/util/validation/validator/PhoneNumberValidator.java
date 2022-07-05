@@ -28,9 +28,7 @@ public class PhoneNumberValidator implements ConstraintValidator<ValidPhoneNumbe
         if (Objects.isNull(phone)) return true;
         pattern = Pattern.compile(PHONE_REGEX);
         matcher = pattern.matcher(phone);
-        if (!matcher.matches()) {
-            return false;
-        }
-        return true;
+        if (matcher.matches()) return true;
+        return false;
     }
 }

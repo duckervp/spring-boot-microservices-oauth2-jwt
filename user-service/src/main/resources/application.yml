@@ -1,7 +1,7 @@
 security:
   oauth2:
-      resource:
-        userInfoUri: http://localhost:3001/auth/user
+    resource:
+      userInfoUri: http://localhost:8900/auth/user
 
 spring:
   main:
@@ -29,7 +29,7 @@ spring:
           starttls:
             enable: true
 server:
-  port: 3002
+  port: 8901
 
 eureka:
   client:
@@ -38,6 +38,6 @@ eureka:
 
 
 ui:
-  url: http://localhost:8888
+  url: http://localhost:3000
 
 passwordResetTokenValidityHours: 24

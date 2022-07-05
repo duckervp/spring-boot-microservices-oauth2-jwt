@@ -1,4 +1,4 @@
-package com.savvycom.userservice.domain.model.updatePassword;
+package com.savvycom.userservice.domain.model.resetPassword;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.savvycom.userservice.util.validation.ValidEmail;
@@ -13,13 +13,10 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserPasswordUpdateInput {
-    @Schema(description = "User id")
-    private Long id;
-
-    @NotBlank(message = "Password must not be null or empty")
-    @Schema(description = "User account old password")
-    private String password;
+public class SetUserPasswordInput {
+    @ValidEmail(message = "Username must be a valid email")
+    @Schema(description = "User email")
+    private String username;
 
     @NotBlank(message = "New password must not be null or empty")
     @Schema(description = "User account new password")

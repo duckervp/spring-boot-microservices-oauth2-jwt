@@ -1,6 +1,6 @@
 package com.savvycom.userservice.common;
 
 public class StatusType {
-    public static final int ACTIVE = 1;
-    public static final int IN_ACTIVE = 0;
+    public static final boolean ACTIVE = true;
+    public static final boolean IN_ACTIVE = false;
 }

@@ -18,6 +18,8 @@ public class Product {
     private Long id;
 
     private String optional;
+    private String color;
+    private String size;
 
     private Long productLineId;
 

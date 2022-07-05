@@ -15,7 +15,15 @@ import java.util.Objects;
 public class Mail {
     private final JavaMailSender mailSender;
 
-    public void sendEmail(String recipientEmail, String link, String name) throws MessagingException, UnsupportedEncodingException {
+    /**
+     * Send password reset email to user when user forgot password
+     * @param recipientEmail User email
+     * @param link Reset password link
+     * @param name User name
+     * @throws MessagingException Error
+     * @throws UnsupportedEncodingException Error
+     */
+    public void sendPasswordResetEmail(String recipientEmail, String link, String name) throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
 

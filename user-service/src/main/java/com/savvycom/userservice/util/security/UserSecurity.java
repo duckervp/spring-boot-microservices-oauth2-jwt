@@ -12,6 +12,15 @@ import org.springframework.stereotype.Component;
 public class UserSecurity {
     private final UserRepository userRepository;
 
+    /**
+     * When user is authenticated, they only can access their own information
+     * This function retrieves authentication info in security context and get user principal,
+     * then when user request user info at route user/:userId,
+     * it checks for whether the user has userId in the route is the user that authenticated.
+     * @param authentication Authentication
+     * @param userId User id
+     * @return true or false
+     */
     public boolean hasUserId(Authentication authentication, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(

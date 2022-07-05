@@ -11,6 +11,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class PageOutput<T> {
     @Schema(description = "List of item")
     List<T> content;
@@ -24,9 +25,4 @@ public class PageOutput<T> {
     @Schema(description = "The number of total elements")
     private Long totalElements;
 
-    @Schema(description = "The number of total pages")
-    private Integer totalPages;
-
-    @Schema(description = "Is current page the last page")
-    private boolean last;
 }

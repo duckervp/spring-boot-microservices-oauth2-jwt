@@ -11,8 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,40 +25,82 @@ public class PaymentService implements IPaymentService {
 
     private final ModelMapper modelMapper;
 
-    @Override
-    public List<PaymentOutput> findAll() {
-        return paymentRepository.findAll().stream()
-                .map(payment -> modelMapper.map(payment, PaymentOutput.class))
-                .collect(Collectors.toList());
-    }
-
+    /**
+     * Find all payment methods by id
+     * @return payment info
+     */
     @Override
     public PaymentOutput findById(Long id) {
         return modelMapper.map(paymentRepository.findById(id), PaymentOutput.class);
     }
 
+    /**
+     * Find all payment methods of a user by user id
+     * @return payment info
+     */
     @Override
     public List<PaymentOutput> findByUserId(Long userId) {
         if (!userService.existsById(userId))
             throw new UserNotFoundException("Not found any user with userId " + userId);
         return paymentRepository.findByUserId(userId).stream()
+                .filter(Payment::isActive)
                 .map(payment -> modelMapper.map(payment, PaymentOutput.class))
                 .collect(Collectors.toList());
     }
 
+    /**
+     * When user wants to add new payment method
+     */
     @Override
-    public void save(Payment payment) {
-        if (!userService.existsById(payment.getUserId()))
+    public PaymentOutput save(Long userId, Payment payment) {
+        if (!userService.existsById(payment.getUserId())) {
             throw new UserNotFoundException("Not found any user with userId " + payment.getUserId());
-        paymentRepository.save(payment);
+        }
+        payment.setUserId(userId);
+        Payment pmt = paymentRepository.save(payment);
+        return modelMapper.map(pmt, PaymentOutput.class);
     }
 
+    /**
+     * Create default payment for each user when a user account is registered
+     */
     @Override
     public void createCashInHandPayment(Long id) {
         Payment payment = new Payment();
         payment.setUserId(id);
         payment.setPaymentType(PaymentType.CASH_IN_HAND);
-        payment.setCreatedAt(new Date());
-        save(payment);
+        payment.setCreatedAt(LocalDateTime.now());
+        paymentRepository.save(payment);
+    }
+
+    /**
+     * Update user payment
+     * @param id payment id
+     * @param payment update information
+     * @return Payment after update
+     */
+    @Override
+    public PaymentOutput update(Long id, Payment payment) {
+        Payment pmt = paymentRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
+        if (Objects.nonNull(payment.getPaymentType())) pmt.setPaymentType(payment.getPaymentType());
+        if (Objects.nonNull(payment.getProvider())) pmt.setProvider(payment.getProvider());
+        if (Objects.nonNull(payment.getNumber())) pmt.setNumber(payment.getNumber());
+        pmt.setModifiedAt(LocalDateTime.now());
+        pmt = paymentRepository.save(pmt);
+        return modelMapper.map(pmt, PaymentOutput.class);
+    }
+
+    /**
+     * Deactivate user payment
+     * @param id payment id
+     */
+    @Override
+    public void delete(Long id) {
+        Payment pmt = paymentRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
+        pmt.setActive(false);
+        pmt.setModifiedAt(LocalDateTime.now());
+        paymentRepository.save(pmt);
     }
 }

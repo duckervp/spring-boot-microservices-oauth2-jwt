@@ -6,13 +6,15 @@ import com.savvycom.userservice.domain.model.getPayment.PaymentOutput;
 import java.util.List;
 
 public interface IPaymentService {
-    List<PaymentOutput> findAll();
-
     PaymentOutput findById(Long id);
 
     List<PaymentOutput> findByUserId(Long userId);
 
-    void save(Payment payment);
+    PaymentOutput save(Long userId, Payment payment);
 
     void createCashInHandPayment(Long userId);
+
+    PaymentOutput update(Long id, Payment payment);
+
+    void delete(Long id);
 }

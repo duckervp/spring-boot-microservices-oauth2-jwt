@@ -1,0 +1,3 @@
+# User service
+
+User service implements functionalities for users such as: register, update password, forgot password, get user information, ...

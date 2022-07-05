@@ -1,4 +1,4 @@
-service:
+serviceHost:
   order: 192.168.196.140
   product: 192.168.196.106
 
@@ -7,35 +7,38 @@ spring:
     name: gateway
   cloud:
     gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedHeaders: "*"
+            allowedMethods: "*"
       routes:
         - id: auth-service
           uri:
-            http://localhost:3001/
+            http://localhost:8900/
           predicates:
             - Path=/oauth/**, /auth/**
         - id: user-service
           uri:
-            http://localhost:3002/
+            http://localhost:8901/
           predicates:
             - Path=/user/**
         - id: product-service
           uri:
-            http://${service.product}:8000/
+            http://${serviceHost.product}:8000/
           predicates:
             - Path=/product/**, /line/**, /branch/**, /inventory/**, /discount/**, /review/**, /category/**
         - id: order-service
           uri:
-            http://${service.order}:8080/
+            http://${serviceHost.order}:8080/
           predicates:
             - Path=/order/**, /cart/**
-        - id: address-service
-          uri:
-            http://localhost:3003/
-          predicates:
-            - Path=/address/**
 
 server:
-  port: ${SERVER_PORT:8762}
+  port: 8762
 eureka:
   client:
     serviceUrl:

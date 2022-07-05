@@ -16,6 +16,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,"/user", "/user/").permitAll()
                 .antMatchers(HttpMethod.POST,"/user/forgotPassword/**").permitAll()
                 .antMatchers(HttpMethod.POST,"/user/resetPassword/**").permitAll()
+                .antMatchers(HttpMethod.POST,"/user/setPassword/**").permitAll()
                 .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .anyRequest().authenticated();
     }

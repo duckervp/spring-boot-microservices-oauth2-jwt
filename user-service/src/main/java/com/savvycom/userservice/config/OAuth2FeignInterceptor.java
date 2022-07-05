@@ -10,6 +10,10 @@ import org.springframework.security.oauth2.provider.authentication.OAuth2Authent
 
 import java.util.Objects;
 
+/**
+ * This class splits authorization header when each request come to this service
+ * and add that authorization header to each request made by feign client on this service to another service
+ */
 @Configuration
 public class OAuth2FeignInterceptor implements RequestInterceptor {
     public static final String TOKEN_TYPE = "Bearer";

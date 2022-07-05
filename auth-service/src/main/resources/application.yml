@@ -11,7 +11,7 @@ spring:
     username: root
     password: ENC(rCbck2Firfg00339kaDGVA==)
 server:
-  port: 3001
+  port: 8900
 
 eureka:
   client:
@@ -23,7 +23,7 @@ security:
     client:
       clientId: client
       clientSecret: ENC(48mMvLaMDImeOJFUE/DT0ufm7y9Rcdn/)
-      accessTokenValiditySeconds: 18000
+      accessTokenValiditySeconds: 5000000
       refreshTokenValiditySeconds: 18000
 encrypt:
   keyStore:

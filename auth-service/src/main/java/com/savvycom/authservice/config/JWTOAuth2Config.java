@@ -69,5 +69,4 @@ public class JWTOAuth2Config extends AuthorizationServerConfigurerAdapter {
                 .checkTokenAccess("isAuthenticated()")
                 .passwordEncoder(passwordEncoder);
     }
-
 }

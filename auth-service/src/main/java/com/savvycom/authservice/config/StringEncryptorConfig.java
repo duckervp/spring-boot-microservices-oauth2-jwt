@@ -7,6 +7,9 @@ import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * This class contains Jasypt String Encryptor config for decode encoded environment variable at *.yml file
+ */
 @Configuration
 @EnableEncryptableProperties
 public class StringEncryptorConfig {

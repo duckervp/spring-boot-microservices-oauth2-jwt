@@ -1,7 +1,7 @@
 security:
   oauth2:
       resource:
-        userInfoUri: http://localhost:3001/auth/user
+        userInfoUri: http://localhost:8900/auth/user
 
 spring:
   main:
