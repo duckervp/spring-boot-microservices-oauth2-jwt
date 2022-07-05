@@ -1,7 +1,7 @@
 security:
   oauth2:
-      resource:
-        userInfoUri: http://localhost:3001/auth/user
+    resource:
+      userInfoUri: http://localhost:8900/auth/user
 
 spring:
   main:
@@ -16,9 +16,20 @@ spring:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:db_user}?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
     username: root
-    password: root
+    password: ENC(T5/NKcOjFiYB/01F1oASPw==)
+  mail:
+    host: smtp.gmail.com
+    username: duc.trantrung99@gmail.com
+    password: ENC(O55yp9uj/S7myBJKQJZh1jwosoyyY2s+HUscOxVaozc=)
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 server:
-  port: 3002
+  port: 8901
 
 eureka:
   client:
@@ -26,3 +37,7 @@ eureka:
     defaultZone: http://localhost:8761/eureka/
 
 
+ui:
+  url: http://localhost:3000
+
+passwordResetTokenValidityHours: 24

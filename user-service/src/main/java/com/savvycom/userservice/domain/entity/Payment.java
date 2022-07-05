@@ -5,8 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "payment")
@@ -21,6 +20,7 @@ public class Payment {
 	private String paymentType;
 	private String provider;
 	private String number;
-	private Date createdAt;
-	private Date modifiedAt;
+	private boolean active;
+	private LocalDateTime createdAt;
+	private LocalDateTime modifiedAt;
 }

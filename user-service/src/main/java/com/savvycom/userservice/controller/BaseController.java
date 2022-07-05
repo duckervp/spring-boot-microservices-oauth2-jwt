@@ -6,35 +6,50 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 public class BaseController {
-
-    public <T> ResponseEntity<?> successResponse(String message, String description, T data) {
+    /**
+     * Create a default succeeded message return object with plain text message and payload
+     * @param message Success or error message
+     * @param data Payload
+     * @return ExtendedMessage
+     * @param <T> Object data
+     */
+    public <T> ResponseEntity<?> successResponse(String message, T data) {
         ExtendedMessage<T> responseMessage =  new ExtendedMessage<>(
                 HttpStatus.OK.value() + "",
                 true,
                 message,
-                description,
                 data);
         return new ResponseEntity<>(responseMessage, HttpStatus.OK);
     }
 
-    public <T> ResponseEntity<?> successResponse(String message, T data) {
-        return successResponse(message, null, data);
+    /**
+     * Create a default succeeded message return object with plain text message
+     * @param message Success or error message
+     * @return ExtendedMessage
+     */
+    public ResponseEntity<?> successResponse(String message) {
+        return successResponse(message, null);
     }
 
+    /**
+     * Create a default succeeded message return object with payload
+     * @param data Payload
+     * @return ExtendedMessage
+     * @param <T> Object data
+     */
     public <T> ResponseEntity<?> successResponse(T data) {
-        return successResponse(null, null, data);
+        return successResponse(null, data);
     }
 
-    public ResponseEntity<?> successResponse() {
-        return successResponse(null, null, null);
-    }
-
-    public ResponseEntity<?> failedResponse(String code, String message, String description) {
-        BaseMessage responseMessage = new BaseMessage(
-                code,
-                false,
-                message,
-                description);
+    /**
+     *  Create a default failed message return object
+     * @param code Http status code
+     * @param message Plain text display error
+     * @return BaseMessage
+     */
+    public ResponseEntity<?> failedResponse(String code, String message) {
+        String prefix = "[User Service]";
+        BaseMessage responseMessage = new BaseMessage(code, false, String.format("%s %s", prefix, message));
         return new ResponseEntity<>(responseMessage, HttpStatus.valueOf(Integer.parseInt(code)));
     }
 }

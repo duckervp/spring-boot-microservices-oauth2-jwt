@@ -9,9 +9,9 @@ spring:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:db_user}?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
     username: root
-    password: root
+    password: ENC(rCbck2Firfg00339kaDGVA==)
 server:
-  port: 3001
+  port: 8900
 
 eureka:
   client:
@@ -22,10 +22,10 @@ security:
   oauth2:
     client:
       clientId: client
-      clientSecret: client@2022
-      accessTokenValiditySeconds: 18000
+      clientSecret: ENC(48mMvLaMDImeOJFUE/DT0ufm7y9Rcdn/)
+      accessTokenValiditySeconds: 5000000
       refreshTokenValiditySeconds: 18000
 encrypt:
   keyStore:
     alias: jwt
-    password: god@123
+    password: ENC(TQVu0i9dxQgQDOo19OSnKg==)

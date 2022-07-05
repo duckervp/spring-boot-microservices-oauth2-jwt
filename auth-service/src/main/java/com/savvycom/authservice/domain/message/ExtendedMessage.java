@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 public class ExtendedMessage<T> extends BaseMessage {
     private T data;
 
-    public ExtendedMessage(String code, Boolean success, String message, String description, T data) {
-        super(code, success, message, description);
+    public ExtendedMessage(String code, Boolean success, String message, T data) {
+        super(code, success, message);
         this.data = data;
     }
 }

@@ -9,6 +9,9 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class adds user_id field to the original access token
+ */
 public class JWTTokenEnhancer extends JwtAccessTokenConverter {
 
     @Override

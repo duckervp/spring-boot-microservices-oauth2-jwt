@@ -1,28 +1,27 @@
 security:
   oauth2:
-    resource:
-      userInfoUri: http://localhost:3001/auth/user
+      resource:
+        userInfoUri: http://localhost:8900/auth/user
 
 spring:
   main:
     allow-bean-definition-overriding: true
   application:
-    name: product-service
+    name: product-service2
   jpa:
     databasePlatform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
       ddlAuto: update
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:test_user}?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:db_user}?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
     username: root
-    password: root
+    password: ENC(T5/NKcOjFiYB/01F1oASPw==)
+
 server:
-  port: 3004
+  port: 8044
 
 eureka:
   client:
   serviceUrl:
     defaultZone: http://localhost:8761/eureka/
-
-
