@@ -1,7 +1,15 @@
+service:
+    hostname:
+      discovery: 192.168.196.207
+      auth: 192.168.196.207
+      mysql: ${MYSQL_HOST:192.168.196.207}
+      ui: localhost
+
+
 security:
   oauth2:
     resource:
-      userInfoUri: http://localhost:8900/auth/user
+      userInfoUri: http://${service.hostname.auth}:8900/auth/user
 
 spring:
   main:
@@ -14,7 +22,7 @@ spring:
       ddlAuto: update
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:db_user}?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
+    url: jdbc:mysql://${service.hostname.mysql}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:db_user}?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
     username: root
     password: ENC(T5/NKcOjFiYB/01F1oASPw==)
   mail:
@@ -33,11 +41,11 @@ server:
 
 eureka:
   client:
-  serviceUrl:
-    defaultZone: http://localhost:8761/eureka/
+    serviceUrl:
+      defaultZone: http://${service.hostname.discovery}:8761/eureka/
 
 
 ui:
-  url: http://localhost:3000
+  url: http://${service.hostname.ui}:3000
 
 passwordResetTokenValidityHours: 24

@@ -1,3 +1,8 @@
+service:
+  hostname:
+    discovery: 192.168.196.207
+    mysql: ${MYSQL_HOST:192.168.196.207}
+
 spring:
   application:
     name: auth-service
@@ -7,7 +12,7 @@ spring:
       ddlAuto: update
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:db_user}?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
+    url: jdbc:mysql://${service.hostname.mysql}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:db_user}?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
     username: root
     password: ENC(rCbck2Firfg00339kaDGVA==)
 server:
@@ -15,8 +20,8 @@ server:
 
 eureka:
   client:
-  serviceUrl:
-    defaultZone: http://localhost:8761/eureka/
+    serviceUrl:
+      defaultZone: http://${service.hostname.discovery}:8761/eureka/
 
 security:
   oauth2:

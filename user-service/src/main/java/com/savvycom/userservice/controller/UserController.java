@@ -307,7 +307,7 @@ public class UserController extends BaseController {
      * @return Number of users
      */
     @PreAuthorize("hasAuthority('admin')")
-    @GetMapping("/")
+    @GetMapping("/qty")
     @Operation(summary = "Find total number of user", security = {@SecurityRequirement(name = "authorization")})
     @ApiResponse(responseCode = HttpStatusCode.OK, description = "Success message with number of users",
             content = { @Content(mediaType = "application/json",

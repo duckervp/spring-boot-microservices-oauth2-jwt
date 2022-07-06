@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+  discovery:
+    image: duckervn/discovery:latest
+    ports:
+      - 8761:8761
+    build:
+      context: "./discovery"
+      dockerfile: "Dockerfile"
+  gateway:
+    image: duckervn/gateway:latest
+    ports:
+      - 8762:8762
+    build:
+      context: "./gateway"
+      dockerfile: "Dockerfile"
+    depends_on:
+      - discovery
+  auth-service:
+    image: duckervn/auth-service:latest
+    ports:
+      - 8900:8900
+    build:
+      context: "./auth-service"
+      dockerfile: "Dockerfile"
+    depends_on:
+      - discovery
+  user-service:
+    image: duckervn/user-service:latest
+    ports:
+      - 8901:8901
+    build:
+      context: "./user-service"
+      dockerfile: "Dockerfile"
+    depends_on:
+      - discovery

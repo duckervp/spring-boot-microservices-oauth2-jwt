@@ -1,6 +1,11 @@
-serviceHost:
-  order: 192.168.196.140
-  product: 192.168.196.106
+service:
+  hostname:
+    discovery: 192.168.196.207
+    auth: 192.168.196.207
+    user: 192.168.196.207
+    order: 192.168.196.140
+    product: 192.168.196.106
+
 
 spring:
   application:
@@ -18,22 +23,22 @@ spring:
       routes:
         - id: auth-service
           uri:
-            http://localhost:8900/
+            http://${service.hostname.auth}:8900/
           predicates:
             - Path=/oauth/**, /auth/**
         - id: user-service
           uri:
-            http://localhost:8901/
+            http://${service.hostname.user}:8901/
           predicates:
             - Path=/user/**
         - id: product-service
           uri:
-            http://${serviceHost.product}:8000/
+            http://${service.hostname.product}:8000/
           predicates:
             - Path=/product/**, /line/**, /branch/**, /inventory/**, /discount/**, /review/**, /category/**
         - id: order-service
           uri:
-            http://${serviceHost.order}:8080/
+            http://${service.hostname.order}:8080/
           predicates:
             - Path=/order/**, /cart/**
 
@@ -42,4 +47,4 @@ server:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://${service.hostname.discovery}:8761/eureka/
