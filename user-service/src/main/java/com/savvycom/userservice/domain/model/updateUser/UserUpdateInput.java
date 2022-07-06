@@ -2,6 +2,7 @@ package com.savvycom.userservice.domain.model.updateUser;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.savvycom.userservice.util.validation.NotBlankIfNotNull;
+import com.savvycom.userservice.util.validation.ValidEmail;
 import com.savvycom.userservice.util.validation.ValidPhoneNumber;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -13,6 +14,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserUpdateInput {
+    @ValidEmail(message = "Username must be a valid email")
+    @Schema(description = "User email")
+    private String username;
+
     @NotBlankIfNotNull(message = "Name must not be blank")
     @Schema(description = "User full name")
     private String name;

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -16,20 +17,37 @@ public class SaleStaffService implements ISaleStaffService {
     private final SaleStaffRepository saleStaffRepository;
 
     /**
-     * Find all sale staff names
-     * @return List of staff name
+     * Find all sale staffs
+     * @return List of staff
      */
     @Override
-    public List<String> findAllSaleStaffName() {
-        return saleStaffRepository.findAll().stream()
-                .filter(SaleStaff::isActive)
-                .map(saleStaff -> saleStaff.getName())
+    public List<SaleStaff> findAllSaleStaff(Boolean active) {
+        List<SaleStaff> saleStaffs = saleStaffRepository.findAll();
+        if (Objects.isNull(active)) {
+            return saleStaffs;
+        } else if(active) {
+            return saleStaffs.stream()
+                    .filter(SaleStaff::isActive)
+                    .collect(Collectors.toList());
+        }
+        return saleStaffs.stream()
+                .filter(saleStaff -> !saleStaff.isActive())
                 .collect(Collectors.toList());
     }
 
     /**
+     * Find sale staff info by id
+     * @return sale staff entity
+     */
+    @Override
+    public SaleStaff findById(Long id) {
+        return saleStaffRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Not found any sale staff with id: " + id));
+    }
+
+    /**
      * Create new sale staff
-     * @param saleStaff sale staff name
+     * @param saleStaff sale staff info
      */
     @Override
     public void create(SaleStaff saleStaff) {

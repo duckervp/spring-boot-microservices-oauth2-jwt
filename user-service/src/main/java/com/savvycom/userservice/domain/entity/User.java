@@ -1,15 +1,11 @@
 package com.savvycom.userservice.domain.entity;
 
-import com.savvycom.userservice.util.validation.ValidEmail;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name = "user")
@@ -27,6 +23,7 @@ public class User {
 	private String address;
 	private String phone;
 	private String role;
+	@Column(columnDefinition = "text")
 	private String avatar;
 	private boolean active;
 	private LocalDateTime createdAt;

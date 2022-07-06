@@ -64,7 +64,7 @@ public class UserController extends BaseController {
      */
     @Bean
     public OpenAPI customOpenAPI(@Value("1.5.9") String appVersion) {
-        var securitySchemeName = "authorization-header";
+        var securitySchemeName = "authorization";
         return new OpenAPI()
                 .components(new Components().addSecuritySchemes(securitySchemeName,
                         new SecurityScheme()
@@ -109,7 +109,7 @@ public class UserController extends BaseController {
      * @return Success response or failed response (handle Exception when username is invalid)
      */
     @PostMapping("/updatePassword")
-    @Operation(summary = "Update password of a user", security = {@SecurityRequirement(name = "authorization-header")})
+    @Operation(summary = "Update password of a user", security = {@SecurityRequirement(name = "authorization")})
     @ApiResponse(responseCode = HttpStatusCode.OK, description = "Update password successful",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ExtendedMessage.class)) })
@@ -200,7 +200,7 @@ public class UserController extends BaseController {
      */
     @PreAuthorize("hasAuthority('admin')")
     @GetMapping()
-    @Operation(summary = "Find all users", security = {@SecurityRequirement(name = "authorization-header")})
+    @Operation(summary = "Find all users", security = {@SecurityRequirement(name = "authorization")})
     @ApiResponse(responseCode = HttpStatusCode.OK, description = "Return all users",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = PageOutputResponse.class)) })
@@ -225,7 +225,7 @@ public class UserController extends BaseController {
      */
     @PreAuthorize("hasAuthority('admin') or @userSecurity.hasUserId(authentication,#userId)")
     @GetMapping("/{userId}")
-    @Operation(summary = "Find specific user information", security = {@SecurityRequirement(name = "authorization-header")})
+    @Operation(summary = "Find specific user information", security = {@SecurityRequirement(name = "authorization")})
     @ApiResponse(responseCode = HttpStatusCode.OK, description = "Success",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = UserOutputResponse.class)) })
@@ -245,7 +245,7 @@ public class UserController extends BaseController {
      * @return success response with list of user corresponding with list id provided
      */
     @GetMapping("/ids")
-    @Operation(summary = "Find users information by list of user id", security = {@SecurityRequirement(name = "authorization-header")})
+    @Operation(summary = "Find users information by list of user id", security = {@SecurityRequirement(name = "authorization")})
     @ApiResponse(responseCode = HttpStatusCode.OK, description = "Success",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = UserOutputsResponse.class)) })
@@ -266,7 +266,7 @@ public class UserController extends BaseController {
      * @return success response or failed response when user info is invalid
      */
     @PostMapping("/{userId}")
-    @Operation(summary = "Update user information", security = {@SecurityRequirement(name = "authorization-header")})
+    @Operation(summary = "Update user information", security = {@SecurityRequirement(name = "authorization")})
     @ApiResponse(responseCode = HttpStatusCode.OK, description = "Success",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ExtendedMessage.class)) })
@@ -287,7 +287,7 @@ public class UserController extends BaseController {
      */
     @PreAuthorize("hasAuthority('admin')")
     @DeleteMapping("/{userId}")
-    @Operation(summary = "Delete user", security = {@SecurityRequirement(name = "authorization-header")})
+    @Operation(summary = "Delete user", security = {@SecurityRequirement(name = "authorization")})
     @ApiResponse(responseCode = HttpStatusCode.OK, description = "Success message",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ExtendedMessage.class)) })
@@ -307,8 +307,8 @@ public class UserController extends BaseController {
      * @return Number of users
      */
     @PreAuthorize("hasAuthority('admin')")
-    @DeleteMapping("/qty")
-    @Operation(summary = "Find total number of user", security = {@SecurityRequirement(name = "authorization-header")})
+    @GetMapping("/")
+    @Operation(summary = "Find total number of user", security = {@SecurityRequirement(name = "authorization")})
     @ApiResponse(responseCode = HttpStatusCode.OK, description = "Success message with number of users",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ExtendedMessage.class)) })
@@ -330,7 +330,7 @@ public class UserController extends BaseController {
      *     or failed response
      */
     @GetMapping("/{userId}/payment")
-    @Operation(summary = "Find all payment methods of a user", security = {@SecurityRequirement(name = "authorization-header")})
+    @Operation(summary = "Find all payment methods of a user", security = {@SecurityRequirement(name = "authorization")})
     @ApiResponse(responseCode = HttpStatusCode.OK, description = "Success",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = PaymentOutputsResponse.class)) })
@@ -351,7 +351,7 @@ public class UserController extends BaseController {
      * @return success response
      */
     @PostMapping("/{userId}/payment")
-    @Operation(summary = "Add new payment method for a user", security = {@SecurityRequirement(name = "authorization-header")})
+    @Operation(summary = "Add new payment method for a user", security = {@SecurityRequirement(name = "authorization")})
     @ApiResponse(responseCode = HttpStatusCode.OK, description = "Success message and Payment info",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = ExtendedMessage.class)) })
@@ -372,7 +372,7 @@ public class UserController extends BaseController {
      *      or failed response
      */
     @GetMapping("/payment/{paymentId}")
-    @Operation(summary = "Find a payment by id", security = {@SecurityRequirement(name = "authorization-header")})
+    @Operation(summary = "Find a payment by id", security = {@SecurityRequirement(name = "authorization")})
     @ApiResponse(responseCode = HttpStatusCode.OK, description = "Return a payment information",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = PaymentOutputResponse.class)) })
@@ -393,7 +393,7 @@ public class UserController extends BaseController {
      * @return Payment after update
      */
     @PostMapping("/payment/{paymentId}")
-    @Operation(summary = "Update a payment by id", security = {@SecurityRequirement(name = "authorization-header")})
+    @Operation(summary = "Update a payment by id", security = {@SecurityRequirement(name = "authorization")})
     @ApiResponse(responseCode = HttpStatusCode.OK, description = "Success message and payment after update",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = PaymentOutputResponse.class)) })
@@ -413,7 +413,7 @@ public class UserController extends BaseController {
      * @return "Succeeded or failed message"
      */
     @DeleteMapping("/payment/{paymentId}")
-    @Operation(summary = "Delete a payment by id", security = {@SecurityRequirement(name = "authorization-header")})
+    @Operation(summary = "Delete a payment by id", security = {@SecurityRequirement(name = "authorization")})
     @ApiResponse(responseCode = HttpStatusCode.OK, description = "Success message",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = PaymentOutputResponse.class)) })
@@ -435,7 +435,7 @@ public class UserController extends BaseController {
      *      or failed response
      */
     @GetMapping("/staff/sale")
-    @Operation(summary = "Find all sale staff name")
+    @Operation(summary = "Find all sale staff name", security = {@SecurityRequirement(name = "authorization")})
     @ApiResponse(responseCode = HttpStatusCode.OK, description = "Return list of sale staff name",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = PaymentOutputResponse.class)) })
@@ -445,13 +445,18 @@ public class UserController extends BaseController {
     @ApiResponse(responseCode = HttpStatusCode.INTERNAL_SERVER_ERROR, description = "Internal Server Error",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = BaseMessage.class)) })
-    public ResponseEntity<?> findAllSaleStaff() {
-        return successResponse(saleStaffService.findAllSaleStaffName());
+    public ResponseEntity<?> findAllSaleStaff(@RequestParam Boolean active) {
+        return successResponse(saleStaffService.findAllSaleStaff(active));
     }
 
+    /**
+     * Create new sale staff
+     * @param saleStaff sale staff info
+     * @return Result message
+     */
     @PreAuthorize("hasAuthority('admin')")
     @PostMapping("/staff/sale")
-    @Operation(summary = "Create sale staff", security = {@SecurityRequirement(name = "authorization-header")})
+    @Operation(summary = "Create sale staff", security = {@SecurityRequirement(name = "authorization")})
     @ApiResponse(responseCode = HttpStatusCode.OK, description = "Success message",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = PaymentOutputResponse.class)) })
@@ -466,8 +471,34 @@ public class UserController extends BaseController {
         return successResponse("Create sale staff success");
     }
 
+    /**
+     * Get sale staff info by id
+     * @param id Sale staff id
+     * @return Sale staff info
+     */
+    @GetMapping("/staff/sale/{id}")
+    @Operation(summary = "Get sale staff by id", security = {@SecurityRequirement(name = "authorization")})
+    @ApiResponse(responseCode = HttpStatusCode.OK, description = "Sale staff info",
+            content = { @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = PaymentOutputResponse.class)) })
+    @ApiResponse(responseCode = HttpStatusCode.BAD_REQUEST, description = "Invalid input",
+            content = { @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = BaseMessage.class)) })
+    @ApiResponse(responseCode = HttpStatusCode.INTERNAL_SERVER_ERROR, description = "Internal Server Error",
+            content = { @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = BaseMessage.class)) })
+    public ResponseEntity<?> getSaleStaff(@PathVariable Long id) {
+        return successResponse(saleStaffService.findById(id));
+    }
+
+    /**
+     * Delete sale staff
+     * @param id Sale staff id
+     * @return Result message
+     */
+    @PreAuthorize("hasAuthority('admin')")
     @DeleteMapping("/staff/sale/{id}")
-    @Operation(summary = "Delete sale staff", security = {@SecurityRequirement(name = "authorization-header")})
+    @Operation(summary = "Delete sale staff", security = {@SecurityRequirement(name = "authorization")})
     @ApiResponse(responseCode = HttpStatusCode.OK, description = "Success message",
             content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = PaymentOutputResponse.class)) })

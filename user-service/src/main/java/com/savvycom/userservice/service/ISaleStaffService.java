@@ -5,7 +5,9 @@ import com.savvycom.userservice.domain.entity.SaleStaff;
 import java.util.List;
 
 public interface ISaleStaffService {
-    List<String> findAllSaleStaffName();
+    List<SaleStaff> findAllSaleStaff(Boolean active);
+
+    SaleStaff findById(Long id);
 
     void create(SaleStaff saleStaff);
 
