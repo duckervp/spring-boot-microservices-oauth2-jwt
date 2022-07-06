@@ -4,6 +4,7 @@ import com.savvycom.authservice.service.security.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -16,6 +17,7 @@ import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
+import javax.sql.DataSource;
 import java.util.Arrays;
 
 @Configuration
@@ -25,11 +27,11 @@ import java.util.Arrays;
 public class JWTOAuth2Config extends AuthorizationServerConfigurerAdapter {
     private final ServiceConfig serviceConfig;
 
+    private final DataSource dataSource;
+
     private final TokenStore tokenStore;
 
     private final AuthenticationManager authenticationManagerBean;
-
-    private final CustomUserDetailsService userDetailsService;
 
     private final JwtAccessTokenConverter jwtAccessTokenConverter;
 
@@ -39,7 +41,7 @@ public class JWTOAuth2Config extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.withClientDetails();
+        clients.withClientDetails(new OAuthClientDetailsService(dataSource, serviceConfig));
     }
 
     @Override
@@ -52,8 +54,7 @@ public class JWTOAuth2Config extends AuthorizationServerConfigurerAdapter {
         endpoints
                 .tokenStore(tokenStore)
                 .tokenEnhancer(tokenEnhancerChain)
-                .authenticationManager(authenticationManagerBean)
-                .userDetailsService(userDetailsService);
+                .authenticationManager(authenticationManagerBean);
     }
 
     @Override
