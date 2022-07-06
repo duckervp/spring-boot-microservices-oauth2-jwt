@@ -7,7 +7,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "auth-service", configuration = AuthFeignClientConfig.class)
+@FeignClient(name = "auth-service", url = "http://192.168.196.207:8900", configuration = AuthFeignClientConfig.class)
 public interface AuthClient {
     @PostMapping("/oauth/token")
     @Headers("Content-Type: multipart/form-data")
