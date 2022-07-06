@@ -39,13 +39,7 @@ public class JWTOAuth2Config extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.inMemory()
-                .withClient(serviceConfig.getClientId())
-                .secret(passwordEncoder.encode(serviceConfig.getClientSecret()))
-                .authorizedGrantTypes("refresh_token", "password")
-                .scopes("ui")
-                .accessTokenValiditySeconds(serviceConfig.getAccessTokenValiditySeconds())
-                .refreshTokenValiditySeconds(serviceConfig.getRefreshTokenValiditySeconds());
+        clients.withClientDetails();
     }
 
     @Override

@@ -1,17 +1,17 @@
 spring:
   application:
-    name: auth-service
+    name: auth-service2
   jpa:
     databasePlatform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
       ddlAuto: update
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:db_user}?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:db_user2}?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true
     username: root
     password: ENC(rCbck2Firfg00339kaDGVA==)
 server:
-  port: 8900
+  port: 8999
 
 eureka:
   client:
