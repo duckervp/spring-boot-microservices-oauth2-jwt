@@ -1,5 +1,6 @@
 package com.savvycom.authservice.config;
 
+import com.savvycom.authservice.repository.UserRepository;
 import com.savvycom.authservice.util.JWTTokenEnhancer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,8 @@ import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFacto
 @RequiredArgsConstructor
 public class JWTTokenStoreConfig {
     private final ServiceConfig serviceConfig;
+
+    private final UserRepository userRepository;
 
     /**
      * Signing our access token by asymmetric keypair from keystore file
@@ -32,7 +35,7 @@ public class JWTTokenStoreConfig {
 
     @Bean
     public TokenEnhancer jwtTokenEnhancer() {
-        return new JWTTokenEnhancer();
+        return new JWTTokenEnhancer(userRepository);
     }
 
     @Bean

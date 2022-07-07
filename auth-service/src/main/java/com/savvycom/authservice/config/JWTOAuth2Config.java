@@ -12,6 +12,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
@@ -39,14 +40,29 @@ public class JWTOAuth2Config extends AuthorizationServerConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
 
+    private static final String CLIENT_FIELDS_FOR_UPDATE = "resource_ids, scope, "
+            + "authorized_grant_types, web_server_redirect_uri, authorities, access_token_validity, "
+            + "refresh_token_validity, additional_information, autoapprove";
+
+    private static final String CLIENT_FIELDS = "client_secret, " + CLIENT_FIELDS_FOR_UPDATE;
+
+    private static final String BASE_FIND_STATEMENT = "select client_id, " + CLIENT_FIELDS
+            + " from db_user2.oauth_client_details";
+
+    private String sql = "SELECT username AS client_id, password AS client_secret, " +
+    "NULL AS resource_ids, 'ui' AS scope, 'client_credentials' AS authorized_grant_types, "+
+    "NULL AS web_server_redirect_uri, role AS authorities, 5000000 AS access_token_validity, "+
+    "18000 AS refresh_token_validity, NULL AS additional_information, NULL AS autoapprove FROM db_user2.user where username = ?";
+    private static final String DEFAULT_SELECT_STATEMENT = BASE_FIND_STATEMENT + " where client_id = ?";
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.inMemory()
-                .withClient(serviceConfig.getClientId())
-                .secret(passwordEncoder.encode(serviceConfig.getClientSecret()))
-                .authorizedGrantTypes("client_credentials", "password")
-                .scopes("ui");
+//        clients.withClientDetails(new OAuthClientDetailsService(dataSource, serviceConfig));
+        JdbcClientDetailsService clientDetailsService = new JdbcClientDetailsService(dataSource);
+        clientDetailsService.setSelectClientDetailsSql(sql);
+        clientDetailsService.setPasswordEncoder(passwordEncoder);
+        clients.withClientDetails(clientDetailsService);
     }
+
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
@@ -56,8 +72,8 @@ public class JWTOAuth2Config extends AuthorizationServerConfigurerAdapter {
                 jwtAccessTokenConverter
         ));
         endpoints
-//                .tokenStore(tokenStore)
-//                .tokenEnhancer(tokenEnhancerChain)
+                .tokenStore(tokenStore)
+                .tokenEnhancer(tokenEnhancerChain)
                 .authenticationManager(authenticationManagerBean);
     }
 

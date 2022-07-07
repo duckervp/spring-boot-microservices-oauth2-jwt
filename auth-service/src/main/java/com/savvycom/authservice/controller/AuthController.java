@@ -28,7 +28,7 @@ public class AuthController {
 		Map<String, Object> userInfo = new HashMap<>();
 		userInfo.put("user", authentication.getPrincipal());
 		userInfo.put("authorities", AuthorityUtils
-				.authorityListToSet(authentication.getUserAuthentication().getAuthorities()));
+				.authorityListToSet(authentication.getOAuth2Request().getAuthorities()));
 		userInfo.put("scope", authentication.getOAuth2Request().getScope());
 		return new ResponseEntity<>(userInfo, HttpStatus.OK);
 	}

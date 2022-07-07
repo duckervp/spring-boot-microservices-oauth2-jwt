@@ -21,9 +21,9 @@ public class ControllerExceptionHandler extends BaseController {
         return failedResponse(HttpStatus.BAD_REQUEST.value() + "", e.getMessage());
     }
 
-    @ExceptionHandler({ Exception.class })
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<?> handleException(Exception e) {
-        return failedResponse(HttpStatus.INTERNAL_SERVER_ERROR.value() + "", e.getMessage());
-    }
+//    @ExceptionHandler({ Exception.class })
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    public ResponseEntity<?> handleException(Exception e) {
+//        return failedResponse(HttpStatus.INTERNAL_SERVER_ERROR.value() + "", e.getMessage());
+//    }
 }
