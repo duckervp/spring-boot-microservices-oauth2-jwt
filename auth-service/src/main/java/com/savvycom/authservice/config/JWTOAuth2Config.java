@@ -41,7 +41,11 @@ public class JWTOAuth2Config extends AuthorizationServerConfigurerAdapter {
 
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-        clients.withClientDetails(new OAuthClientDetailsService(dataSource, serviceConfig));
+        clients.inMemory()
+                .withClient(serviceConfig.getClientId())
+                .secret(passwordEncoder.encode(serviceConfig.getClientSecret()))
+                .authorizedGrantTypes("client_credentials", "password")
+                .scopes("ui");
     }
 
     @Override
@@ -52,8 +56,8 @@ public class JWTOAuth2Config extends AuthorizationServerConfigurerAdapter {
                 jwtAccessTokenConverter
         ));
         endpoints
-                .tokenStore(tokenStore)
-                .tokenEnhancer(tokenEnhancerChain)
+//                .tokenStore(tokenStore)
+//                .tokenEnhancer(tokenEnhancerChain)
                 .authenticationManager(authenticationManagerBean);
     }
 
